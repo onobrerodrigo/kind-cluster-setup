@@ -11,12 +11,25 @@ Para executar este script, você precisará ter as seguintes ferramentas instala
 * [Velero](https://velero.io/docs/v1.3.0/velero-install/)
 
 ## Configuração do MetalLB
-O arquivo ```metallb-config.yaml``` configura o MetalLB com um pool de endereços IP. Para adaptar o endereço IP ao seu ambiente, você pode gerar a subnet do seu cluster Kind executando o seguinte comando:
+O arquivo metallb-config.yaml é utilizado para configurar o MetalLB com um pool de endereços IP definido por você. Para assegurar que o MetalLB utilize a rede personalizada que você criou com Docker, é essencial configurar a subnet corretamente.
+
+Caso você tenha criado sua própria rede Docker com o nome kindnet (ou outro nome de sua preferência), faça isso antes de executar o script para criar o cluster com Kind. Você pode criar uma rede Docker com uma subnet específica usando o seguinte comando:
 
 ```bash
-docker network inspect kind | jq '.[].IPAM | .Config | .[1].Subnet' | cut -d \" -f 2
+docker network create --driver bridge --subnet=172.19.0.0/16 kindnet
 ```
-Utilize o intervalo de IP obtido para atualizar a seção addresses no arquivo ```metallb-config.yaml```.
+Após criar a rede Docker personalizada, utilize o intervalo de IP que você definiu no comando acima para atualizar a seção addresses no arquivo metallb-config.yaml. Por exemplo, se você utilizou a subnet ```172.19.0.0/16```, você poderia configurar um range de IPs no ```metallb-config.yaml``` da seguinte forma:
+
+```bash
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ginga
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.19.0.100-172.19.0.105
+```
 
 ## Configuração do Cert-Manager
 O arquivo ```cert-manager-cluster-issuer.yaml``` define dois ClusterIssuers para o Cert-Manager, um para o ambiente de staging e outro para produção, ambos usando o ACME server da Let's Encrypt e configurados para resolver desafios via ingress com o Nginx.
