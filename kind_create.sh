@@ -20,7 +20,7 @@ fi
 # Define as variáveis do script
 VER_METALLB='v0.14.9'
 VER_INGRESS='4.12.1'
-VER_CERT_MANAGER='v1.12.15'
+VER_CERT_MANAGER='v1.17.1'
 VER_METRICS_SERVER='3.12.2'
 VER_INFISICAL='0.8.15'
 VELERO_BUCKET_NAME='velero-backup-example'
