@@ -4,8 +4,6 @@ networking:
   apiServerAddress: 127.0.0.1
   apiServerPort: 6443
 
-  network: "kindnet"
-
 nodes:
 - role: control-plane
   image: docker.io/kindest/node:v1.31.2@sha256:18fbefc20a7113353c7b75b5c869d7145a6abd6269154825872dc59c1329912e
