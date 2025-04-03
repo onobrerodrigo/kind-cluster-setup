@@ -25,7 +25,7 @@ VER_METRICS_SERVER='3.12.2'
 VER_INFISICAL='0.8.15'
 VELERO_BUCKET_NAME='velero-backup-example'
 VELERO_S3_URL='https://s3.eu-central-1.amazonaws.com,region=eu-central-1'
-VELERO_SECRET_FILE_DIR='./cloud-credentials'
+VELERO_SECRET_FILE_DIR='./cloud-credentials-sample'
 
 # Criando um cluster Kubernetes com o KinD
 kind create cluster --name $NAME_CLUSTER --config ./kind.yaml || exit 1
@@ -50,15 +50,10 @@ echo "Installing Ingress Nginx Controller 🌐"
 helm upgrade --install ingress-nginx ingress-nginx/ingress-nginx --version $VER_INGRESS --create-namespace --namespace ingress-nginx > /dev/null || exit 1
 echo "✓ Ingress Nginx Controller Installed"
 
-# Instalando os CRD's para o Cert-Manager
-echo "Installing Cert Manager CRD 🔑"
-kubectl create --filename https://github.com/cert-manager/cert-manager/releases/download/$VER_CERT_MANAGER/cert-manager.crds.yaml > /dev/null || exit 1
-echo "✓ Cert Manager CRD Installed"
-
-# Instalando o serviço do Cert-Manager
-echo "Installing Cert Manager 🔑"
+# Instalando o serviço do Cert-Manager e CRDs
+echo "Installing Cert Manager and CRDs 🔑"
 helm upgrade --install cert-manager jetstack/cert-manager --version $VER_CERT_MANAGER --create-namespace --namespace cert-manager --set crds.enabled=true > /dev/null || exit 1
-echo "✓ Cert Manager Installed"
+echo "✓ Cert Manager and CRDs Installed"
 
 # Criando um Cluster Issuer customizado
 echo "Creating Custom Cluster Issuer 🔑"
