@@ -5,7 +5,7 @@ on:
     branches:
       - main
     tags:
-      - 'v${{ github.run_number }}'
+      - 'v*'
 
 jobs:
   update_release:
