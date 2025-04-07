@@ -1,0 +1,17 @@
+name: Tag Commit
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Tag Commit
+          uses: actions/checkout@v2
+          with:
+            fetch-depth: 0
+        - name: Create Tag
+          env:
+            VERSION: v-${{ github.run_number }}
+          run: |
+            git tag -f -a ${VERSION} -m "Release ${VERSION}."
+            git push -f origin ${VERSION}}
