@@ -1,17 +1,27 @@
-name: Tag Commit
-on: [push]
+name: Update Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
 
 jobs:
-  build:
+  update_release:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Create tag
-        uses: actions/github-script@v5
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/'v0.2',
-              sha: context.sha
-            })
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
