@@ -15,5 +15,6 @@ jobs:
 
       - name: Create Tag
         run: |
+          git config --global user.name ${{ secrets.GH_USER }}
           git tag -a v1.0.0 -m "Release v1.0.0"
           git push origin v1.0.0
