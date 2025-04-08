@@ -1,8 +1,8 @@
-### Descrição
-O repositório ```kind-cluster-setup``` oferece um script de automação para a criação e configuração de um cluster Kubernetes local utilizando ```KinD```, juntamente com a instalação de serviços essenciais como ```MetalLB```, ```Ingress Nginx Controller```, ```Cert-Manager```, ```Metrics Server```, [Infisical](https://infisical.com/) e [Velero](https://velero.io/docs/v1.3.0/basic-install/). Este setup é ideal para desenvolvedores e testadores que buscam um ambiente Kubernetes completo e funcional com mínima configuração manual.
+### Description
+The kind-cluster-setup repository provides an automation script for creating and configuring a local Kubernetes cluster using KinD, along with the installation of essential services such as MetalLB, Ingress Nginx Controller, Cert-Manager, Metrics Server, Infisical, and Velero. This setup is ideal for developers and testers looking for a complete and functional Kubernetes environment with minimal manual configuration.
 
-## Pré-requisitos
-Para executar este script, você precisará ter as seguintes ferramentas instaladas em sua máquina:
+## Prerequisites
+To run this script, you will need to have the following tools installed on your machine:
 
 * [Docker](https://docs.docker.com/engine/install/)
 * [Helm](https://helm.sh/docs/intro/quickstart/)
@@ -10,15 +10,15 @@ Para executar este script, você precisará ter as seguintes ferramentas instala
 * [Kind](https://kind.sigs.k8s.io/docs/user/quickstart/)
 * [Velero](https://velero.io/docs/v1.3.0/velero-install/)
 
-## Configuração do MetalLB
-O arquivo metallb-config.yaml é utilizado para configurar o MetalLB com um pool de endereços IP definido por você. Para assegurar que o MetalLB utilize a rede personalizada que você criou com Docker, é essencial configurar a subnet corretamente.
+## MetalLB Configuration
+The file metallb-config.yaml is used to configure MetalLB with an IP address pool defined by you. To ensure that MetalLB uses the custom network you created with Docker, it is essential to correctly configure the subnet.
 
-Caso você tenha criado sua própria rede Docker com o nome kindnet (ou outro nome de sua preferência), faça isso antes de executar o script para criar o cluster com Kind. Você pode criar uma rede Docker com uma subnet específica usando o seguinte comando:
+If you have created your own Docker network with the name kindnet (or another name of your preference), do this before running the script to create the cluster with Kind. You can create a Docker network with a specific subnet using the following command:
 
 ```bash
-docker network create --driver bridge --subnet=172.19.0.0/16 kindnet
+docker network create --driver bridge --subnet=172.19.0.0/16 kind
 ```
-Após criar a rede Docker personalizada, utilize o intervalo de IP que você definiu no comando acima para atualizar a seção addresses no arquivo metallb-config.yaml. Por exemplo, se você utilizou a subnet ```172.19.0.0/16```, você poderia configurar um range de IPs no ```metallb-config.yaml``` da seguinte forma:
+After creating the custom Docker network, use the IP range you defined in the above command to update the addresses section in the metallb-config.yaml file. For example, if you used the subnet 172.19.0.0/16, you could configure an IP range in metallb-config.yaml as follows:
 
 ```bash
 apiVersion: metallb.io/v1beta1
@@ -31,34 +31,33 @@ spec:
   - 172.19.0.100-172.19.0.105
 ```
 
-## Configuração do Cert-Manager
-O arquivo ```cert-manager-cluster-issuer.yaml``` define dois ClusterIssuers para o Cert-Manager, um para o ambiente de staging e outro para produção, ambos usando o ACME server da Let's Encrypt e configurados para resolver desafios via ingress com o Nginx.
+## Cert-Manager Configuration
+The file cert-manager-cluster-issuer.yaml defines two ClusterIssuers for Cert-Manager, one for the staging environment and another for production, both using the ACME server from Let's Encrypt and configured to resolve challenges via ingress with Nginx.
 
-## Execução do Script
+## Running the Script
 
-Para executar o script e configurar seu cluster Kubernetes local, siga os passos abaixo:
+To run the script and set up your local Kubernetes cluster, follow the steps below:
 
-1. Clone este repositório para a sua máquina local.
+1. Clone this repository to your local machine.
 
-2. Verifique se todos os pré-requisitos estão instalados e configurados.
+2. Ensure all prerequisites are installed and configured.
 
-3. Defina o nome do cluster que deseja criar.
+3. Define the name of the cluster you wish to create.
 
-4. Execute o script com o nome do cluster como argumento:
+4. Run the script with the cluster name as an argument:
 
 ```bash
 ./kind_create.sh --name-cluster meu-cluster-k8s
 ```
-O script irá criar o cluster, instalar os serviços mencionados e aplicar as configurações específicas de cada serviço.
+The script will create the cluster, install the mentioned services, and apply the specific configurations for each service.
 
-## Estrutura de Arquivos
-* ```kind.yaml```: Define a configuração do cluster Kubernetes com Kind, incluindo nodes, imagens e mapeamentos de portas.
-* ```metallb-config.yaml```: Configuração do pool de IPs para o MetalLB.
-* ```cert-manager-cluster-issuer.yaml```: Configuração dos emissores de certificado para o Cert-Manager.
-* ```kind_create.sh```: Script principal para automação da criação do cluster e instalação dos serviços.
+## File Structure
+* ```kind.yaml```: Defines the Kubernetes cluster configuration with Kind, including nodes, images, and port mappings.
+* ```metallb-config.yaml```: IP pool configuration for MetalLB.
+* ```cert-manager-cluster-issuer.yaml```:  Configuration of certificate issuers for Cert-Manager.
+* ```kind_create.sh```: Main script for automating cluster creation and service installation.
 
-
-## Exemplo final de como deve funcionar o script
+## Final Example of How the Script Should Work
 
 ```bash
 ./kind_create.sh --name-cluster ginga                                                                                                                                                    
@@ -99,11 +98,11 @@ Installing Velero ⛵
 ✓ Velero Installed
 ```
 
-## Informações Adicionais
-Credenciais de Nuvem: O arquivo ```cloud-credentials``` contém as credenciais necessárias para o Velero interagir com o armazenamento em nuvem. Certifique-se de substituir os valores ```key_id``` e ```access_key``` pelas suas credenciais reais.
+## Additional Information
+Cloud Credentials: The cloud-credentials file contains the necessary credentials for Velero to interact with cloud storage. Make sure to replace the key_id and access_key values with your actual credentials.
 
-## Contribuição
-Contribuições são bem-vindas! Sinta-se livre para abrir issues ou enviar pull requests com melhorias, correções de bugs ou adaptações para diferentes provedores de nuvem e configurações de cluster.
+## Contribution
+Contributions are welcome! Feel free to open issues or send pull requests with improvements, bug fixes, or adaptations for different cloud providers and cluster configurations.
 
 ## Disclaimer
-Este script é fornecido como está, sem garantias de qualquer tipo. É importante que você revise e ajuste as configurações para atender às necessidades específicas do seu projeto e às melhores práticas de segurança.
+This script is provided as is, without any warranties. It is important that you review and adjust the configurations to meet the specific needs of your project and adhere to security best practices.

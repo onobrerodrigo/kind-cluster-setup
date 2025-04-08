@@ -1,0 +1,23 @@
+name: Creating a Dynamic Tag
+
+on:
+  push:
+
+    paths-ignore:
+      - '**.md'
+
+    branches:
+      - main
+jobs:
+  create_tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Creating a Dynamic Tag for the Repository
+        run: |
+          git config --global user.name ${{ secrets.GH_USER }}
+          git tag -a "v0.${{ github.run_number }}" -m "Release v0.${{ github.run_number }}"
+          git push origin "v0.${{ github.run_number }}"

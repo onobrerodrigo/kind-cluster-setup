@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Delete a Local Kubernetes Cluster with Kind
+# Delete a Local Kubernetes Cluster with KinD
 
 # Check if the cluster name argument is provided
 if [ -z "$1" ]; then
@@ -17,5 +17,5 @@ else
   exit 1
 fi
 
-# Create Kubernetes cluster with Kind
+# Delete Kubernetes cluster with KinD
 kind delete cluster --name $NAME_CLUSTER || exit 1
